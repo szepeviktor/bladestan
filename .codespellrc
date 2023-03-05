@@ -1,6 +1,6 @@
 [codespell]
-skip=./.git
+skip=./.git,./composer.lock
 check-hidden=
 check-filenames=
 builtin=clear,rare,informal,usage,code,names
-ignore-words-list=
+ignore-words-list=master
