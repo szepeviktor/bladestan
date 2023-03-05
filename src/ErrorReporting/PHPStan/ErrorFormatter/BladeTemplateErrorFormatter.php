@@ -43,7 +43,7 @@ class BladeTemplateErrorFormatter
             $style->success('No errors');
             if ($this->showTipsOfTheDay) {
                 if ($analysisResult->isDefaultLevelUsed()) {
-                    $output->writeLineFormatted('💡 Tip of the Day:');
+                    $output->writeLineFormatted('💡 Tip of the Day:'); // @ignore-non-ascii
                     $output->writeLineFormatted(sprintf(
                         "PHPStan is performing only the most basic checks.\nYou can pass a higher rule level through the <fg=cyan>--%s</> option\n(the default and current level is %d) to analyse code more thoroughly.",
                         AnalyseCommand::OPTION_LEVEL,
@@ -73,11 +73,11 @@ class BladeTemplateErrorFormatter
                 if ($error->getTip() !== null) {
                     $tip = $error->getTip();
                     $tip = str_replace('%configurationFile%', $projectConfigFile, $tip);
-                    $message .= "\n💡 " . $tip;
+                    $message .= "\n💡 " . $tip; // @ignore-non-ascii
                 }
 
                 if (is_string($this->editorUrl)) {
-                    $message .= "\n✏️  " . str_replace(['%file%', '%line%'], [$error->getTraitFilePath() ?? $error->getFilePath(), (string) $error->getLine()], $this->editorUrl);
+                    $message .= "\n✏️  " . str_replace(['%file%', '%line%'], [$error->getTraitFilePath() ?? $error->getFilePath(), (string) $error->getLine()], $this->editorUrl); // @ignore-non-ascii
                 }
 
                 $templateFilePath = $error->getMetadata()['template_file_path'] ?? null;
