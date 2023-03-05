@@ -139,6 +139,12 @@ jobs:
         -
             name: "Check PSR-4 mapping"
             run: "composer dump-autoload --no-interaction --optimize --strict-psr"
+        -
+            name: "Check Commented Code"
+            run: "composer exec -- easy-ci check-commented-code src/ tests/"
+        -
+            name: "Check Active Classes"
+            run: "composer exec -- easy-ci check-active-class src/"
         #-
         #    name: "Check architecture"
         #    run: "composer exec -- phparkitect check --config=vendor/mortexa/laravel-arkitect/src/phparkitect.php"
