@@ -198,7 +198,7 @@ jobs:
         -
             name: "Check exported files"
             run: |
-                EXPECTED="LICENSE,README.md,composer.json"
+                EXPECTED="LICENSE,composer.json"
                 CURRENT="$(
                     git archive HEAD \
                         | tar --list --exclude="src" --exclude="src/*" --exclude="config" --exclude="config/*" \
