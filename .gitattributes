@@ -3,6 +3,7 @@
 *.php text
 *.inc text
 
+/assets/            export-ignore
 /tests/             export-ignore
 /.github/           export-ignore
 /.codespellrc       export-ignore
@@ -12,6 +13,7 @@
 /CHANGELOG.md       export-ignore
 /CONTRIBUTING.md    export-ignore
 /README.md          export-ignore
+/easy-ci.php        export-ignore
 /ecs.php            export-ignore
 /phpstan.neon       export-ignore
 /phpunit.xml        export-ignore
