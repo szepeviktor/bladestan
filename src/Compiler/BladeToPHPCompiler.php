@@ -61,7 +61,7 @@ STRING;
 
     /**
      * @param string[] $components
-     * @phpstan-param array<int, array{class: string, alias: string, prefix: string}> $components
+     * @param array<int, array{class: string, alias: string, prefix: string}> $components
      */
     public function __construct(
         private readonly Filesystem $fileSystem,
@@ -93,12 +93,12 @@ STRING;
         Assert::allIsInstanceOf($variablesAndTypes, VariableAndType::class);
 
         // Precompile contents to add template file name and line numbers
-        $fileContents = $this->fileNameAndLineNumberAddingPreCompiler->setFileName($filePath)->compileString(
-            $fileContents
-        );
+        $fileContents = $this->fileNameAndLineNumberAddingPreCompiler
+            ->setFileNameAndCompileString($filePath, $fileContents);
 
         // Extract PHP content from HTML and PHP mixed content
-        $rawPhpContent = $this->phpContentExtractor->extract($this->bladeCompiler->compileString($fileContents));
+        $compiledBlade = $this->bladeCompiler->compileString($fileContents);
+        $rawPhpContent = $this->phpContentExtractor->extract($compiledBlade);
 
         $includes = $this->getIncludes($rawPhpContent);
 
@@ -114,9 +114,8 @@ STRING;
                     $includedFilePath = $this->fileViewFinder->find($include->getIncludedViewName());
                     $includedFileContents = $this->fileSystem->get($includedFilePath);
 
-                    $preCompiledContents = $this->fileNameAndLineNumberAddingPreCompiler->setFileName(
-                        $includedFilePath
-                    )->compileString($includedFileContents);
+                    $preCompiledContents = $this->fileNameAndLineNumberAddingPreCompiler
+                        ->setFileNameAndCompileString($includedFilePath, $includedFileContents);
                     $compiledContent = $this->bladeCompiler->compileString($preCompiledContents);
                     $includedContent = $this->phpContentExtractor->extract($compiledContent, false);
                 } catch (Throwable) {
@@ -161,7 +160,6 @@ STRING;
 
         $decoratedPhpContent = $this->decoratePhpContent($rawPhpContent, $variablesAndTypes);
         $phpLinesToTemplateLines = $this->phpLineToTemplateLineResolver->resolve($decoratedPhpContent);
-
         return new PhpFileContentsWithLineMap($decoratedPhpContent, $phpLinesToTemplateLines);
     }
 
@@ -172,11 +170,10 @@ STRING;
     {
         $stmts = $this->simplePhpParser->parse($phpContent);
 
-        // Apply some visitors
-        // - get rid of $__env variables
-        // - get rid of e() function calls
         $this->traverseStmtsWithVisitors($stmts, [
+            // get rid of $__env variables
             new RemoveEnvVariableNodeVisitor(),
+            // get rid of e() function calls
             new RemoveEscapeFunctionNodeVisitor(),
             new AddLoopVarTypeToForeachNodeVisitor(),
         ]);
@@ -185,14 +182,12 @@ STRING;
         $docNodes = $this->varDocNodeFactory->createDocNodes($variablesAndTypes);
         $stmts = array_merge($docNodes, $stmts);
 
-        $printedPhpContents = $this->printerStandard->prettyPrintFile($stmts);
-        return $printedPhpContents . PHP_EOL;
+        return $this->printerStandard->prettyPrintFile($stmts) . PHP_EOL;
     }
 
     /**
-     * @param Stmt[]                $stmts
+     * @param Stmt[] $stmts
      * @param NodeVisitorAbstract[] $nodeVisitors
-     *
      * @return Node[]
      */
     private function traverseStmtsWithVisitors(array $stmts, array $nodeVisitors): array
@@ -233,7 +228,7 @@ STRING;
             return;
         }
 
-        //Hack to make the compiler work
+        // Hack to make the compiler work
         $application = new Application($currentWorkingDirectory);
         $application->bind(
             \Illuminate\Contracts\Foundation\Application::class,
@@ -250,7 +245,7 @@ STRING;
 
         $application->alias('view', 'foo');
 
-        //Register components
+        // Register components
         foreach ($this->components as $component) {
             $this->bladeCompiler->component($component['class'], $component['alias'], $component['prefix']);
         }
