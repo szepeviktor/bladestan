@@ -32,19 +32,19 @@ jobs:
             name: "Checkout repository"
             uses: "actions/checkout@v3"
             with:
-              path: "bladestan"
+                path: "bladestan"
         -
             name: "Install PHP"
             uses: "shivammathur/setup-php@v2"
             with:
-              php-version: "8.1"
-              coverage: "none"
+                php-version: "8.1"
+                coverage: "none"
         -
             name: "Checkout dependent repository"
             uses: "actions/checkout@v3"
             with:
                 repository: "monicahq/monica"
-                ref: "43f4d0a419bdba33c5482494b66048327a2ff629",
+                ref: "43f4d0a419bdba33c5482494b66048327a2ff629"
                 path: "e2e"
         -
             name: "Install dependencies"
