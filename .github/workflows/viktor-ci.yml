@@ -23,3 +23,39 @@ jobs:
     call_reusable_workflow_spelling:
         name: "Spelling"
         uses: "szepeviktor/bladestan/.github/workflows/reusable-spelling.yml@ci-viktor-utopia"
+    e2e_tests:
+        name: "End-to-end tests"
+        runs-on: "ubuntu-22.04"
+        timeout-minutes: 5
+        steps:
+        -
+            name: "Checkout repository"
+            uses: "actions/checkout@v3"
+            with:
+              path: "bladestan"
+        -
+            name: "Install PHP"
+            uses: "shivammathur/setup-php@v2"
+            with:
+              php-version: "8.1"
+              coverage: "none"
+        -
+            name: "Checkout dependent repository"
+            uses: "actions/checkout@v3"
+            with:
+                repository: "monicahq/monica"
+                ref: "43f4d0a419bdba33c5482494b66048327a2ff629",
+                path: "e2e"
+        -
+            name: "Install dependencies"
+            run: |
+              cd e2e/
+              composer install --no-interaction --no-scripts
+              composer config repositories.0 '{ "type": "path", "url": "../bladestan", "options": { "symlink": false } }'
+              composer config minimum-stability dev
+              composer require --no-interaction --dev --update-with-all-dependencies "tomasvotruba/bladestan:*"
+        -
+            name: "Perform static analysis"
+            run: |
+              cd e2e/
+              composer exec -- phpstan analyze -c vendor/tomasvotruba/bladestan/config/extension.neon -l max resources/views/
