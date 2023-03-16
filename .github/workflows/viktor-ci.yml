@@ -49,13 +49,13 @@ jobs:
         -
             name: "Install dependencies"
             run: |
-              cd e2e/
-              composer install --no-interaction --no-scripts
-              composer config repositories.0 '{ "type": "path", "url": "../bladestan", "options": { "symlink": false } }'
-              composer config minimum-stability dev
-              composer require --no-interaction --dev --update-with-all-dependencies "tomasvotruba/bladestan:*"
+                cd e2e/
+                composer install --no-interaction --no-scripts
+                composer config repositories.0 '{ "type": "path", "url": "../bladestan", "options": { "symlink": false } }'
+                composer config minimum-stability dev
+                composer require --no-interaction --dev --update-with-all-dependencies "tomasvotruba/bladestan:*"
         -
             name: "Perform static analysis"
             run: |
-              cd e2e/
-              composer exec -- phpstan analyze -c vendor/tomasvotruba/bladestan/config/extension.neon -l max resources/views/
+                cd e2e/
+                composer exec -- phpstan analyze -c vendor/tomasvotruba/bladestan/config/extension.neon -l max resources/views/
