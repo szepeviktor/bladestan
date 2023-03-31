@@ -19,8 +19,6 @@ rules:
 services:
     errorFormatter.blade:
         class: TomasVotruba\Bladestan\ErrorReporting\PHPStan\ErrorFormatter\BladeTemplateErrorFormatter
-        arguments:
-            editorUrl: %editorUrl%
 
     - PhpParser\ConstExprEvaluator
     - Illuminate\Filesystem\Filesystem
@@ -35,7 +33,7 @@ services:
         class: Illuminate\View\FileViewFinder
         factory: ['@TomasVotruba\Bladestan\Laravel\View\FileViewFinderFactory', 'create']
 
-    - TomasVotruba\Bladestan\Rules\ViewRuleHelper
+    - TomasVotruba\Bladestan\ViewRuleHelper
     - TomasVotruba\Bladestan\Blade\PhpLineToTemplateLineResolver
     - TomasVotruba\Bladestan\ErrorReporting\Blade\TemplateErrorsFactory
     - TomasVotruba\Bladestan\NodeAnalyzer\TemplateFilePathResolver

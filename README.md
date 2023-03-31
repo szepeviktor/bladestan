@@ -1,6 +1,6 @@
 # Bladestan
 
-Laravel running on compiled Blade templates and extra static-analysis for Blade
+Static analysis for Blade templates in Laravel projects.
 
 ## Install
 
@@ -19,26 +19,44 @@ parameters:
             # default
             - resources/views
 ```
+<br>
+
+If you run PHPStan with its [extension installer](https://phpstan.org/user-guide/extension-library#installing-extensions), Bladestan will just work, if not you need to include it in the `phpstan.neon` configuration file:
+
+```neon
+includes:
+    - ./vendor/tomasvotruba/bladestan/config/extension.neon
+```
+
+
+<br>
 
 ## Features
 
 ### Custom Error Formatter
 
-We provide custom PHPStan error formatter to better display the template errors. The custom error formatter extends the PHPStan's table error formatter and just adds additional information about template errors to the message.
+We provide custom PHPStan error formatter to better display the template errors:
 
-An example:
+* clickable template file path link to the error in blade template
 
-![](./assets/example.png "Custom error formatter output example")
+```bash
+ ------ -----------------------------------------------------------
+  Line   app/Http/Controllers/PostCodexController.php
+ ------ -----------------------------------------------------------
+  20     Call to an undefined method App\Entity\Post::getConten().
+         rendered in: post_codex.blade.php:15
+ ------ -----------------------------------------------------------
+```
 
 How to use custom error formatter?
 
-```shell
-vendor/bin/phpstan --error-format blade
+```bash
+vendor/bin/phpstan analyze --error-format blade
 ```
+
+<br>
 
 ## Credits
 
-People:
-
 - [Can Vural](https://github.com/canvural) - this package is based on that, with upgrade for Laravel 10 and active maintenance
-- [All Contributors](https://github.com/tomasvotruba/bladestane)
+- [All Contributors](https://github.com/TomasVotruba/bladestan/graphs/contributors)
