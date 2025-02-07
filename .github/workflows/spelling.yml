@@ -1,0 +1,14 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow
+
+name: Spelling
+on:
+    pull_request: null
+
+jobs:
+    typos:
+        runs-on: ubuntu-latest
+        steps:
+            -
+                uses: actions/checkout@v4
+            -
+                uses: crate-ci/typos@master
